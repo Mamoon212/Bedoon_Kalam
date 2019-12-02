@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/pickModeFragment"
+        android:name="com.mo2a.example.charades_.PickModeFragment"
+        android:label="fragment_pick_mode"
+        tools:layout="@layout/fragment_pick_mode">
+        <action
+            android:id="@+id/action_pickModeFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+        <action
+            android:id="@+id/action_pickModeFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.mo2a.example.charades_.GameFragment"
+        android:label="fragment_game"
+        tools:layout="@layout/fragment_game">
+        <argument
+            android:name="numTeams"
+            app:argType="integer" />
+        <argument
+            android:name="numRounds"
+            app:argType="integer" />
+        <argument
+            android:name="roundDur"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_gameFragment_to_pickModeFragment"
+            app:destination="@id/pickModeFragment" />
+        <action
+            android:id="@+id/action_gameFragment_to_scoreFragment"
+            app:destination="@id/scoreFragment" />
+        <action
+            android:id="@+id/action_gameFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/scoreFragment"
+        android:name="com.mo2a.example.charades_.ScoreFragment"
+        android:label="fragment_score"
+        tools:layout="@layout/fragment_score">
+        <argument
+            android:name="numTeams"
+            app:argType="integer" />
+        <argument
+            android:name="numRounds"
+            app:argType="integer" />
+        <argument
+            android:name="teamOneScore"
+            app:argType="integer" />
+        <argument
+            android:name="teamTwoScore"
+            app:argType="integer" />
+        <argument
+            android:name="teamThreeScore"
+            app:argType="integer" />
+        <argument
+            android:name="teamFourScore"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_scoreFragment_to_pickModeFragment"
+            app:destination="@id/pickModeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.mo2a.example.charades_.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_pickModeFragment"
+            app:destination="@id/pickModeFragment" />
+    </fragment>
+
+</navigation>
