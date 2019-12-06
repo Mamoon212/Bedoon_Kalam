@@ -62,6 +62,22 @@ class GameFragment : Fragment() {
             }
         })
 
+        //take a break
+        gameViewModel.breakState.observe(this, Observer {
+            if(it){
+                binding.timerText.visibility= View.GONE
+                binding.movieText.visibility= View.GONE
+                binding.doneButton.visibility=View.GONE
+                binding.readyButton.visibility= View.GONE
+                binding.teamText.visibility= View.GONE
+                binding.nextButton.visibility= View.VISIBLE
+            }else{
+                binding.nextButton.visibility= View.GONE
+                binding.teamText.visibility= View.VISIBLE
+                binding.movieText.visibility= View.VISIBLE
+            }
+        })
+
         //set movie text
         gameViewModel.commonMovieChannel.observe(this, Observer {
             it?.let {
@@ -74,13 +90,6 @@ class GameFragment : Fragment() {
             binding.timerText.text = it
         })
 
-//        //round finished
-//        gameViewModel.eventRoundFinish.observe(this, Observer {
-//            if (it) {
-//                binding.movieText.text = getString(R.string.time_up)
-//                binding.doneButton.text = getString(R.string.try_again)
-//            }
-//        })
 
         //game over
         gameViewModel.eventGameFinish.observe(this, Observer {
@@ -88,6 +97,7 @@ class GameFragment : Fragment() {
                 binding.doneButton.visibility = View.GONE
                 binding.readyButton.visibility = View.GONE
                 binding.teamText.visibility = View.GONE
+                binding.timerText.visibility= View.GONE
                 if(args.numTeams >1){
                     binding.scoreButton.visibility = View.VISIBLE
                 }else{
@@ -133,12 +143,6 @@ class GameFragment : Fragment() {
             }
         })
 
-//        //set team text
-//        gameViewModel.teamMode.observe(this, Observer {
-//            if(it > 1){
-//                binding.teamText.text= getString(R.string.team_one)
-//            }
-//        })
 
         //switch team text
         gameViewModel.shouldSwitchTeams.observe(this, Observer {

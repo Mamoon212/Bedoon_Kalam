@@ -73,6 +73,11 @@ class GameViewModel(
     val shouldSwitchTeams: LiveData<Int>
         get() = _shouldSwitchTeams
 
+    //break state
+    private val _breakState = MutableLiveData<Boolean>()
+    val breakState: LiveData<Boolean>
+        get() = _breakState
+
     //ready state
     private val _readyToStart = MutableLiveData<Boolean>()
     val readyToStart: LiveData<Boolean>
@@ -114,7 +119,7 @@ class GameViewModel(
                 if (isGameOver()) {
                     endGame()
                 } else {
-                    notReady()
+                    takeBreak()
                     changeMovie()
                     switchTeams()
                     roundsPlayed++
@@ -142,11 +147,11 @@ class GameViewModel(
 
     fun gotItClicked() {
         _buzz.value = BuzzType.CORRECT
-        notReady()
         if (isGameOver()) {
             raiseScore(i - 1)
             endGame()
         } else {
+            takeBreak()
             raiseScore(i - 1)
             changeMovie()
             switchTeams()
@@ -195,6 +200,17 @@ class GameViewModel(
         }
     }
 
+    fun takeBreak() {
+        _breakState.value = true
+    }
+
+
+    fun nextButtonClicked() {
+        notReady()
+        _breakState.value = false
+
+    }
+
 
     fun quitGame() {
         _navigateBack.value = true
@@ -212,8 +228,8 @@ class GameViewModel(
         _navigateToPick.value = true
     }
 
-    fun doneNavigatingToPick(){
-        _navigateToPick.value= false
+    fun doneNavigatingToPick() {
+        _navigateToPick.value = false
     }
 
     fun navigateToScore() {
