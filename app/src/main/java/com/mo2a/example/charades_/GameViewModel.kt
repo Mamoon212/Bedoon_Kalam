@@ -147,6 +147,7 @@ class GameViewModel(
 
     fun gotItClicked() {
         _buzz.value = BuzzType.CORRECT
+        stopTimer()
         if (isGameOver()) {
             raiseScore(i - 1)
             endGame()
