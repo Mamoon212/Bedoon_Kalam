@@ -91,6 +91,7 @@ class GameFragment : Fragment() {
         gameViewModel.commonMovieChannel.observe(this, Observer {
             it?.let {
                 binding.movieText.text = it.title
+                binding.readyButton.isEnabled= true
             }
         })
 
