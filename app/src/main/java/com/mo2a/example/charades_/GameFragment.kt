@@ -7,13 +7,13 @@ import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.getSystemService
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -49,32 +49,41 @@ class GameFragment : Fragment() {
 
         //ready to start
         gameViewModel.readyToStart.observe(this, Observer {
-            if(it){
-                binding.timerText.visibility= View.VISIBLE
-                binding.doneButton.visibility= View.VISIBLE
-                binding.readyButton.visibility= View.GONE
+            if (it) {
+                binding.timerText.visibility = View.VISIBLE
+                binding.doneButton.visibility = View.VISIBLE
+                binding.readyButton.visibility = View.GONE
+                binding.gameBackground.background =
+                    resources.getDrawable(R.mipmap.aflam_app_material_06_640x960)
                 gameViewModel.startTimer()
-            }else{
-                binding.timerText.visibility= View.GONE
-                binding.doneButton.visibility= View.GONE
-                binding.readyButton.visibility= View.VISIBLE
+            } else {
+                binding.timerText.visibility = View.GONE
+                binding.doneButton.visibility = View.GONE
+                binding.readyButton.visibility = View.VISIBLE
+                binding.gameBackground.background =
+                    resources.getDrawable(R.mipmap.aflam_app_material_07_640x960)
                 gameViewModel.stopTimer()
             }
         })
 
         //take a break
         gameViewModel.breakState.observe(this, Observer {
-            if(it){
-                binding.timerText.visibility= View.GONE
-                binding.movieText.visibility= View.GONE
-                binding.doneButton.visibility=View.GONE
-                binding.readyButton.visibility= View.GONE
-                binding.teamText.visibility= View.GONE
-                binding.nextButton.visibility= View.VISIBLE
-            }else{
-                binding.nextButton.visibility= View.GONE
-                binding.teamText.visibility= View.VISIBLE
-                binding.movieText.visibility= View.VISIBLE
+            if (it) {
+                binding.timerText.visibility = View.GONE
+                binding.movieText.visibility = View.GONE
+                binding.doneButton.visibility = View.GONE
+                binding.readyButton.visibility = View.GONE
+                binding.teamText.visibility = View.GONE
+                binding.nextButton.visibility = View.VISIBLE
+                binding.gameBackground.background =
+                    resources.getDrawable(R.mipmap.aflam_app_material_07_640x960)
+            } else {
+                binding.nextButton.visibility = View.GONE
+                binding.teamText.visibility = View.VISIBLE
+                binding.movieText.visibility = View.VISIBLE
+                binding.gameBackground.background =
+                    resources.getDrawable(R.mipmap.aflam_app_material_06_640x960)
+
             }
         })
 
@@ -97,48 +106,53 @@ class GameFragment : Fragment() {
                 binding.doneButton.visibility = View.GONE
                 binding.readyButton.visibility = View.GONE
                 binding.teamText.visibility = View.GONE
-                binding.timerText.visibility= View.GONE
-                if(args.numTeams >1){
+                binding.timerText.visibility = View.INVISIBLE
+                binding.gameBackground.background =
+                    resources.getDrawable(R.mipmap.aflam_app_material_07_640x960)
+                if (args.numTeams > 1) {
                     binding.scoreButton.visibility = View.VISIBLE
-                }else{
-                    binding.singleModePlayAgain.visibility= View.VISIBLE
+                } else {
+                    binding.singleModePlayAgain.visibility = View.VISIBLE
                 }
                 binding.movieText.text = getString(R.string.game_over)
             }
         })
 
         gameViewModel.navigateToPick.observe(this, Observer {
-            if(it){
-                this.findNavController().navigate(GameFragmentDirections.actionGameFragmentToPickModeFragment())
+            if (it) {
+                this.findNavController()
+                    .navigate(GameFragmentDirections.actionGameFragmentToPickModeFragment())
                 gameViewModel.doneNavigatingToPick()
             }
         })
 
         //handle back button
-        requireActivity().onBackPressedDispatcher.addCallback(this,object :OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                        val alertDialog = activity?.let {
-                            val builder = AlertDialog.Builder(it)
-                            builder.apply {
-                                setPositiveButton("Yes") { _, _ ->
-                                    gameViewModel.quitGame()
-                                }
-                                setNegativeButton("No") { _, _ ->
-                                    gameViewModel.cancelQuit()
-                                }
+        requireActivity().onBackPressedDispatcher.addCallback(this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val alertDialog = activity?.let {
+                        val builder = AlertDialog.Builder(it)
+                        builder.apply {
+                            setMessage("Are you sure you want to quit the game?")
+                            setPositiveButton("Yes") { _, _ ->
+                                gameViewModel.quitGame()
                             }
-                                .setMessage("Are you sure you want to quit the game?")
-
-                            builder.create()
+                            setNegativeButton("No") { _, _ ->
+                                gameViewModel.cancelQuit()
+                            }
                         }
-                        alertDialog?.show()
+                        builder.create()
                     }
-        })
+                    alertDialog?.show()
+                }
+            }
+        )
 
         //navigate back
         gameViewModel.navigateBack.observe(this, Observer {
-            if(it){
-                this.findNavController().navigate(GameFragmentDirections.actionGameFragmentToHomeFragment())
+            if (it) {
+                this.findNavController()
+                    .navigate(GameFragmentDirections.actionGameFragmentToHomeFragment())
                 gameViewModel.doneNavigatingBack()
             }
         })
@@ -146,18 +160,18 @@ class GameFragment : Fragment() {
 
         //switch team text
         gameViewModel.shouldSwitchTeams.observe(this, Observer {
-            Log.i("3aww", "$it" )
+            Log.i("3aww", "$it")
             when (it) {
-                1 -> binding.teamText.text= getString(R.string.team_one)
-                2 -> binding.teamText.text= getString(R.string.team_two)
-                3 -> binding.teamText.text= getString(R.string.team_three)
-                4 -> binding.teamText.text= getString(R.string.team_four)
+                1 -> binding.teamText.text = getString(R.string.team_one)
+                2 -> binding.teamText.text = getString(R.string.team_two)
+                3 -> binding.teamText.text = getString(R.string.team_three)
+                4 -> binding.teamText.text = getString(R.string.team_four)
             }
         })
 
         //vibrate
         gameViewModel.buzz.observe(this, Observer {
-            if(it != GameViewModel.BuzzType.NO_BUZZ){
+            if (it != GameViewModel.BuzzType.NO_BUZZ) {
                 buzz(it.pattern)
                 gameViewModel.onBuzzComplete()
             }
@@ -165,15 +179,17 @@ class GameFragment : Fragment() {
 
         //navigate to score screen
         gameViewModel.navigateToScore.observe(this, Observer {
-            if(it){
-                this.findNavController().navigate(GameFragmentDirections.actionGameFragmentToScoreFragment(
-                    args.numTeams,
-                    args.numRounds,
-                    gameViewModel.teamOneScore,
-                    gameViewModel.teamTwoScore,
-                    gameViewModel.teamThreeScore,
-                    gameViewModel.teamFourScore
-                    ))
+            if (it) {
+                this.findNavController().navigate(
+                    GameFragmentDirections.actionGameFragmentToScoreFragment(
+                        args.numTeams,
+                        args.numRounds,
+                        gameViewModel.teamOneScore,
+                        gameViewModel.teamTwoScore,
+                        gameViewModel.teamThreeScore,
+                        gameViewModel.teamFourScore
+                    )
+                )
                 gameViewModel.doneNavigatingToScore()
             }
         })

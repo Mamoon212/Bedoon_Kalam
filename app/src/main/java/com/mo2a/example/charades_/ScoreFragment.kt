@@ -3,12 +3,12 @@ package com.mo2a.example.charades_
 
 import android.app.AlertDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -42,57 +42,59 @@ class ScoreFragment : Fragment() {
         val scoreViewModel =
             ViewModelProviders.of(this, scoreViewModelFactory).get(ScoreViewModel::class.java)
 
-        binding.scoreViewModel= scoreViewModel
-        binding.lifecycleOwner= this
+        binding.scoreViewModel = scoreViewModel
+        binding.lifecycleOwner = this
 
 
         scoreViewModel.showThreeScores.observe(this, Observer {
-            if(it){
-                binding.scoreTeamThree.visibility= View.VISIBLE
+            if (it) {
+                binding.scoreTeamThree.visibility = View.VISIBLE
             }
         })
 
         scoreViewModel.showFourScores.observe(this, Observer {
-            if(it){
-                binding.scoreTeamThree.visibility= View.VISIBLE
-                binding.scoreTeamFour.visibility= View.VISIBLE
+            if (it) {
+                binding.scoreTeamThree.visibility = View.VISIBLE
+                binding.scoreTeamFour.visibility = View.VISIBLE
             }
         })
 
         scoreViewModel.winner.observe(this, Observer {
-            if(it.isNotEmpty()){
-                binding.winnerText.text= "$it has won!"
-            }else{
-                binding.winnerText.text= "It's a draw!"
+            if (it.isNotEmpty()) {
+                binding.winnerText.text = "$it هو الكسبان!"
+            } else {
+                binding.winnerText.text = "تعادل!"
             }
         })
 
         scoreViewModel.navigateBack.observe(this, Observer {
-            if(it){
-                this.findNavController().navigate(ScoreFragmentDirections.actionScoreFragmentToPickModeFragment())
+            if (it) {
+                this.findNavController()
+                    .navigate(ScoreFragmentDirections.actionScoreFragmentToPickModeFragment())
                 scoreViewModel.doneNavigating()
             }
         })
 
-        requireActivity().onBackPressedDispatcher.addCallback(this,object : OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                val alertDialog = activity?.let {
-                    val builder = AlertDialog.Builder(it)
-                    builder.apply {
-                        setPositiveButton("Yes") { _, _ ->
-                            activity?.finish()
-                        }
-                        setNegativeButton("No") { _, _ ->
+        requireActivity().onBackPressedDispatcher.addCallback(this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val alertDialog = activity?.let {
+                        val builder = AlertDialog.Builder(it)
+                        builder.apply {
+                            setMessage("Are you sure you want to close the application?")
+                            setPositiveButton("Yes") { _, _ ->
+                                activity?.finish()
+                            }
+                            setNegativeButton("No") { _, _ ->
 
+                            }
                         }
+                        builder.create()
                     }
-                        .setMessage("Are you sure you want to close the application?")
-
-                    builder.create()
+                    alertDialog?.show()
                 }
-                alertDialog?.show()
             }
-        })
+        )
 
         return binding.root
     }

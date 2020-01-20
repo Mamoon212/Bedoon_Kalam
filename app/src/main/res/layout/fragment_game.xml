@@ -11,27 +11,20 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/gameBackground"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-<!--        <com.google.android.material.button.MaterialButton-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:padding="16dp"-->
-<!--            android:text="@string/start"-->
-<!--            android:textSize="36sp"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
+        android:layout_height="match_parent"
+        android:background="@mipmap/aflam_app_material_07_640x960">
 
 
         <TextView
             android:id="@+id/team_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="200dp"
+            android:fontFamily="@font/font3"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -41,6 +34,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:fontFamily="@font/font3"
+            android:textColor="@android:color/white"
+            android:textSize="36sp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
@@ -49,22 +45,31 @@
 
         <TextView
             android:id="@+id/movie_text"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="350dp"
+            android:fontFamily="@font/font3"
             android:text="@string/fetching"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="40sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/timer_text" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="غصن الزيتون" />
 
         <Button
             android:id="@+id/done_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="100dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="200dp"
+            android:background="@mipmap/button"
+            android:fontFamily="@font/font3"
             android:onClick="@{()->gameViewModel.gotItClicked()}"
             android:text="@string/got_it"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -73,34 +78,48 @@
 
         <Button
             android:id="@+id/score_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="250dp"
-            android:text="@string/score_button_text"
-            android:visibility="gone"
+            android:layout_width="200dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="50dp"
+            android:background="@mipmap/button"
+            android:fontFamily="@font/font3"
             android:onClick="@{()-> gameViewModel.navigateToScore()}"
+            android:text="@string/score_button_text"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_text" />
 
         <Button
             android:id="@+id/single_mode_play_again"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="250dp"
-            android:text="@string/play_again"
-            android:visibility="gone"
+            android:layout_width="140dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="50dp"
+            android:background="@mipmap/button"
+            android:fontFamily="@font/font3"
             android:onClick="@{()-> gameViewModel.navigateToPick()}"
+            android:text="@string/play_again"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_text" />
 
         <Button
             android:id="@+id/ready_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Ready"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="200dp"
+            android:background="@mipmap/button"
+            android:fontFamily="@font/font3"
             android:onClick="@{()->gameViewModel.ready()}"
+            android:text="@string/Ready"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -108,12 +127,15 @@
 
         <Button
             android:id="@+id/next_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="الّي بعده"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:background="@mipmap/button"
+            android:fontFamily="@font/font3"
+            android:textColor="@android:color/white"
+            android:onClick="@{()->gameViewModel.nextButtonClicked()}"
+            android:text="@string/next"
             android:textSize="24sp"
             android:visibility="gone"
-            android:onClick="@{()->gameViewModel.nextButtonClicked()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
