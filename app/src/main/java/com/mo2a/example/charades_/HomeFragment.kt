@@ -27,7 +27,8 @@ class HomeFragment : Fragment() {
         val binding: FragmentHomeBinding= DataBindingUtil.inflate(
             inflater, R.layout.fragment_home, container, false
         )
-        val homeViewModel= ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        val homeViewModelFactory= HomeViewModelFactory(activity?.application!!, activity!!)
+        val homeViewModel= ViewModelProviders.of(this, homeViewModelFactory).get(HomeViewModel::class.java)
 
         binding.homeViewModel= homeViewModel
 
@@ -48,7 +49,11 @@ class HomeFragment : Fragment() {
                         }
                     }
                         .setTitle("About this application")
-                        .setMessage("Blah blah blah blah blah")
+                        .setMessage("- لو عجبك الأبلكيشن وعايز تدعمني وكمان متشوفش إعلانات تاني تقدر تشتري النسخة المدفوعة. \n" +
+                                "- أول مرة تفتح اللعبة ممكن تاخد وقت في التحميل ممكن يوصل دقايق، ده هيحصل أول مرة بس، سيبه يكمل عادي وهي هتشتغل لما يخلص.\n" +
+                                "- مكتبة الأفلام فيها ١٧٢٢ فيلم، هي كل الأفلام المتسجلة على ويكيبيديا من ١٩٢٠ لحد ٢٠١٩، اختيار الأسامي بيكون عشوائي فوارد إن يحصل تكرار لكن ده مش معناه إن الأفلام خلصت. \n" +
+                                "- المفروض كل واحد يمسك الموبايل الّي عليه اللعبة في دوره ويديه للّي بعده لما يخلص. \n" +
+                                "- اتبسطوا!")
 
                     builder.create()
                 }

@@ -2,6 +2,12 @@ package com.mo2a.example.charades_
 
 
 import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.graphics.Color
+import android.media.AudioAttributes
+import android.media.SoundPool
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
@@ -17,6 +23,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.mo2a.example.charades_.databinding.FragmentGameBinding
 
 /**
@@ -24,10 +32,17 @@ import com.mo2a.example.charades_.databinding.FragmentGameBinding
  */
 class GameFragment : Fragment() {
 
+    private lateinit var mInterstitialAd: InterstitialAd
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        mInterstitialAd = InterstitialAd(this.context)
+        mInterstitialAd.adUnitId = "ca-app-pub-6956387476413004/6523595809"
+        mInterstitialAd.loadAd(AdRequest.Builder().build())
+
 
         val args = GameFragmentArgs.fromBundle(arguments!!)
 
@@ -44,6 +59,7 @@ class GameFragment : Fragment() {
         val gameViewModel =
             ViewModelProviders.of(this, gameViewModelFactory).get(GameViewModel::class.java)
 
+        createChannel(getString(R.string.app_notification_channel_id), getString(R.string.app_notification_channel_id))
         binding.gameViewModel = gameViewModel
 
 
@@ -91,7 +107,7 @@ class GameFragment : Fragment() {
         gameViewModel.commonMovieChannel.observe(this, Observer {
             it?.let {
                 binding.movieText.text = it.title
-                binding.readyButton.isEnabled= true
+                binding.readyButton.isEnabled = true
             }
         })
 
@@ -116,6 +132,11 @@ class GameFragment : Fragment() {
                     binding.singleModePlayAgain.visibility = View.VISIBLE
                 }
                 binding.movieText.text = getString(R.string.game_over)
+                if (mInterstitialAd.isLoaded) {
+                    mInterstitialAd.show()
+                } else {
+                    Log.d("TAG", "The interstitial wasn't loaded yet.")
+                }
             }
         })
 
@@ -211,5 +232,27 @@ class GameFragment : Fragment() {
         }
     }
 
+    private fun createChannel(channelId: String, channelName: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            )
+                .apply {
+                    setShowBadge(false)
+                }
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.RED
+            notificationChannel.enableVibration(true)
+            notificationChannel.description =
+                getString(R.string.time_up)
+            Log.i("haha", notificationChannel.sound.toString())
+            val notificationManager = requireActivity().getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager?.createNotificationChannel(notificationChannel)
 
+        }
+    }
 }

@@ -1,8 +1,14 @@
 package com.mo2a.example.charades_
 
 import android.app.Application
+import android.app.NotificationManager
+import android.content.ContentResolver
+import android.content.Context
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.CountDownTimer
 import android.text.format.DateUtils
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import java.util.*
@@ -114,8 +120,10 @@ class GameViewModel(
 
         timer = object : CountDownTimer(COUNTDOWN_TIME, ONE_SECOND) {
             override fun onFinish() {
+                _buzz.value= BuzzType.NO_BUZZ
                 _currentTime.value = DONE
-                _buzz.value = BuzzType.GAME_OVER
+                sendNotification(application)
+                playNotificationSound()
                 if (isGameOver()) {
                     endGame()
                 } else {
@@ -139,6 +147,7 @@ class GameViewModel(
 
     fun startTimer() {
         timer.start()
+        cancelNotification(getApplication())
     }
 
     fun stopTimer() {
@@ -243,10 +252,42 @@ class GameViewModel(
 
     fun ready() {
         _readyToStart.value = true
+
     }
 
     private fun notReady() {
         _readyToStart.value = false
+    }
+
+    private fun sendNotification(context: Context){
+        val notificationManager = ContextCompat.getSystemService(
+            context,
+            NotificationManager::class.java
+        ) as NotificationManager
+
+        notificationManager.sendNotification(
+            context.getText(R.string.time_up).toString(),
+            context
+        )
+    }
+
+    private fun cancelNotification(context: Context) {
+        val notificationManager = ContextCompat.getSystemService(
+            context,
+            NotificationManager::class.java
+        ) as NotificationManager
+
+        notificationManager.cancelNotifications()
+    }
+
+    private fun playNotificationSound(){
+        try{
+            val alarmSound= Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +getApplication<Application>().packageName + "/raw/time_up_sound_converted")
+            val r= RingtoneManager.getRingtone(getApplication(), alarmSound)
+            r.play()
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
     }
 
     enum class TeamClass(

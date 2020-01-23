@@ -15,6 +15,16 @@
         android:layout_height="match_parent"
         android:background="@mipmap/aflam_app_material_03_640x960">
 
+        <Button
+            android:id="@+id/pay_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/ic_valentines_day"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -35,30 +45,42 @@
             android:id="@+id/button"
             android:layout_width="140dp"
             android:layout_height="70dp"
-            android:layout_marginTop="285dp"
+            android:layout_marginBottom="5dp"
             android:background="@mipmap/button"
             android:fontFamily="@font/font3"
             android:onClick="@{()-> homeViewModel.play()}"
             android:text="@string/play"
             android:textColor="@android:color/white"
             android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@id/divider"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="140dp"
             android:layout_height="70dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:background="@mipmap/button"
             android:fontFamily="@font/font3"
             android:onClick="@{()-> homeViewModel.about()}"
             android:text="@string/about"
             android:textColor="@android:color/white"
             android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="@+id/button"
-            app:layout_constraintTop_toBottomOf="@+id/button" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="409dp"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
