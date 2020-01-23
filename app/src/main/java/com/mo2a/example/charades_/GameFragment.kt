@@ -5,9 +5,6 @@ import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.graphics.Color
-import android.media.AudioAttributes
-import android.media.SoundPool
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
@@ -39,9 +36,14 @@ class GameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        val prefs = activity!!.getSharedPreferences("MyPrefs", 0)
+        val isPaid: Boolean = prefs.getBoolean("paid", false)
+
         mInterstitialAd = InterstitialAd(this.context)
         mInterstitialAd.adUnitId = "ca-app-pub-6956387476413004/6523595809"
-        mInterstitialAd.loadAd(AdRequest.Builder().build())
+        if (!isPaid) {
+            mInterstitialAd.loadAd(AdRequest.Builder().build())
+        }
 
 
         val args = GameFragmentArgs.fromBundle(arguments!!)
@@ -59,7 +61,10 @@ class GameFragment : Fragment() {
         val gameViewModel =
             ViewModelProviders.of(this, gameViewModelFactory).get(GameViewModel::class.java)
 
-        createChannel(getString(R.string.app_notification_channel_id), getString(R.string.app_notification_channel_id))
+        createChannel(
+            getString(R.string.app_notification_channel_id),
+            getString(R.string.app_notification_channel_id)
+        )
         binding.gameViewModel = gameViewModel
 
 
@@ -132,11 +137,14 @@ class GameFragment : Fragment() {
                     binding.singleModePlayAgain.visibility = View.VISIBLE
                 }
                 binding.movieText.text = getString(R.string.game_over)
-                if (mInterstitialAd.isLoaded) {
-                    mInterstitialAd.show()
-                } else {
-                    Log.d("TAG", "The interstitial wasn't loaded yet.")
+                if (!isPaid) {
+                    if (mInterstitialAd.isLoaded) {
+                        mInterstitialAd.show()
+                    } else {
+                        Log.d("TAG", "The interstitial wasn't loaded yet.")
+                    }
                 }
+
             }
         })
 
@@ -182,7 +190,6 @@ class GameFragment : Fragment() {
 
         //switch team text
         gameViewModel.shouldSwitchTeams.observe(this, Observer {
-            Log.i("3aww", "$it")
             when (it) {
                 1 -> binding.teamText.text = getString(R.string.team_one)
                 2 -> binding.teamText.text = getString(R.string.team_two)
