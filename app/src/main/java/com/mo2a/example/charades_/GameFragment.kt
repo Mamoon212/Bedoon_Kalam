@@ -254,7 +254,6 @@ class GameFragment : Fragment() {
             notificationChannel.enableVibration(true)
             notificationChannel.description =
                 getString(R.string.time_up)
-            Log.i("haha", notificationChannel.sound.toString())
             val notificationManager = requireActivity().getSystemService(
                 NotificationManager::class.java
             )

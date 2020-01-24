@@ -13,7 +13,7 @@ import com.android.billingclient.api.*
 class HomeViewModel(application: Application, private val activity: Activity) :
     AndroidViewModel(application), PurchasesUpdatedListener {
     private lateinit var billingClient: BillingClient
-    private val skuList = listOf("android.test.purchased")
+    private val skuList = listOf("paidversionnoads15996")
     private lateinit var skuDetails: SkuDetails
 
 
@@ -27,9 +27,6 @@ class HomeViewModel(application: Application, private val activity: Activity) :
 
     init {
         setupBillingClient()
-        if(!ranBefore()) {
-            checkPastPurchases()
-        }
     }
 
 
@@ -74,25 +71,31 @@ class HomeViewModel(application: Application, private val activity: Activity) :
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     // The BillingClient is setup successfully
-                    Log.i("3aww", "done")
+                    if (!ranBefore()) {
+                        checkPastPurchases()
+                    }
                     loadAllSKUs()
 
-                } else {
-                    Log.i("3aww", "failed")
 
+                } else {
+                    Toast.makeText(
+                        activity,
+                        "Connection error, try again later.",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
 
             override fun onBillingServiceDisconnected() {
                 // Try to restart the connection on the next request to
                 // Google Play by calling the startConnection() method.
-                Log.i("3aww", "fail")
-
+               Log.e("disconnect", "Service disconnected")
             }
         })
 
     }
 
+    @Suppress("ControlFlowWithEmptyBody")
     private fun loadAllSKUs() = if (billingClient.isReady) {
         val params = SkuDetailsParams
             .newBuilder()
@@ -104,25 +107,25 @@ class HomeViewModel(application: Application, private val activity: Activity) :
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList.isNotEmpty()) {
                 for (skuDetails in skuDetailsList) {
                     //this will return both the SKUs from Google Play Console
-                    if (skuDetails.sku == "android.test.purchased") {
+                    if (skuDetails.sku == "paidversionnoads15996") {
                         this.skuDetails = skuDetails
                     }
 
                 }
             } else {
-                Log.i("3aww", "wrong")
+                Log.e("SKU", "error getting sku details")
+
             }
         }
 
     } else {
-        println("Billing Client not ready")
+
     }
 
     override fun onPurchasesUpdated(
         billingResult: BillingResult?,
         purchases: MutableList<Purchase>?
     ) {
-        checkPastPurchases()
         if (billingResult?.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (purchase in purchases) {
                 if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
@@ -162,7 +165,7 @@ class HomeViewModel(application: Application, private val activity: Activity) :
             if (responseCode == BillingClient.BillingResponseCode.OK) {
                 saveIntoSharedPrefs()
             } else {
-                Log.e("purchaseError", debugMessage)
+                Log.e("error acknowledge", debugMessage)
             }
 
         }
@@ -179,11 +182,11 @@ class HomeViewModel(application: Application, private val activity: Activity) :
     private fun checkPastPurchases() {
         val purchaseHistory: List<Purchase>? =
             billingClient.queryPurchases(BillingClient.SkuType.INAPP).purchasesList
-        Log.i("history", "$purchaseHistory")
         purchaseHistory?.let {
-            Log.i("yo", "yoyoyo")
-            if (it.isNotEmpty()) {
-                saveIntoSharedPrefs()
+            for (purchase in it) {
+                if (purchase.sku == "paidversionnoads15996") {
+                    saveIntoSharedPrefs()
+                }
             }
         }
     }
